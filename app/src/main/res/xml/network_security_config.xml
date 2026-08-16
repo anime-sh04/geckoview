@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Network security configuration.
+
+  The <domain-config> below scopes TLS trust for the dev server to the
+  system trust store only - this is what ships in RELEASE builds, so a
+  production build of this app will NOT trust a self-signed certificate.
+
+  The <debug-overrides> block is an Android-platform feature: the Android
+  Gradle Plugin automatically strips it out of release builds, so it only
+  ever applies when you run/install a debug build. It additionally trusts
+  "user" CAs - i.e. certificates you have manually installed on the test
+  device/emulator via Settings > Security > Encryption & credentials >
+  Install a certificate > CA certificate.
+
+  See README.md ("Development-only HTTPS/certificate considerations") for
+  the exact steps to install the dev server's self-signed certificate as a
+  user CA on your test device or emulator. Nothing here disables TLS
+  validation globally, and no bypass is compiled into release builds.
+-->
+<network-security-config>
+
+    <domain-config>
+        <domain includeSubdomains="false">10.11.111.11</domain>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+
+    <base-config>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </debug-overrides>
+
+</network-security-config>

@@ -1,0 +1,9 @@
+<resources>
+    <color name="background">#FFFFFF</color>
+    <color name="on_background">#1A1A1A</color>
+    <color name="primary">#2A5DB0</color>
+    <color name="primary_dark">#1E4485</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="muted">#6E6E6E</color>
+    <color name="error">#B3261E</color>
+</resources>
