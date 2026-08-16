@@ -66,6 +66,24 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
+      - name: Print wrapper diagnostics
+        run: |
+          echo "=== pwd ==="
+          pwd
+          echo "=== repo root listing ==="
+          ls -la
+          echo "=== gradle/wrapper listing ==="
+          ls -la gradle/wrapper
+          echo "=== file types ==="
+          file gradlew
+          file gradle/wrapper/gradle-wrapper.jar
+          echo "=== GradleWrapperMain present in jar? ==="
+          jar tf gradle/wrapper/gradle-wrapper.jar | grep GradleWrapperMain
+          echo "=== CLASSPATH construction in gradlew ==="
+          grep -n "CLASSPATH" ./gradlew
+          echo "=== direct classpath sanity check (bypasses the shell script entirely) ==="
+          java -cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain --version
+
       - name: Build debug APK
         run: ./gradlew assembleDebug --stacktrace
 
