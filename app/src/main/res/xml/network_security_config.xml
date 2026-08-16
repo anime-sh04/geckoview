@@ -21,7 +21,7 @@
 <network-security-config>
 
     <domain-config>
-        <domain includeSubdomains="false">10.11.111.11</domain>
+        <domain includeSubdomains="false">accounts.hcaptcha.com/demo</domain>
         <trust-anchors>
             <certificates src="system" />
         </trust-anchors>
