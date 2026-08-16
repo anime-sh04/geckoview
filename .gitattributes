@@ -1,0 +1,22 @@
+# Auto detect text files and normalize line endings for everything else.
+* text=auto eol=lf
+
+# The Gradle wrapper jar is a binary ZIP archive. It must NEVER be run
+# through git's text/CRLF normalization -- doing so corrupts the archive
+# and produces exactly the failure this project hit:
+#   "Could not find or load main class org.gradle.wrapper.GradleWrapperMain"
+gradle/wrapper/gradle-wrapper.jar binary -text -diff
+
+# Windows batch script must keep CRLF; the POSIX script must keep LF.
+gradlew text eol=lf
+gradlew.bat text eol=crlf
+
+# Other common binary types, in case launcher icons / keystores etc. are
+# added later -- keep them out of text normalization too.
+*.jar binary -text -diff
+*.png binary -text -diff
+*.jpg binary -text -diff
+*.jpeg binary -text -diff
+*.webp binary -text -diff
+*.keystore binary -text -diff
+*.jks binary -text -diff

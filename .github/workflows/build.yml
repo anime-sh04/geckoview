@@ -18,6 +18,31 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          # Belt-and-braces: make sure Actions' git client never rewrites
+          # line endings on checkout, which would corrupt the binary
+          # gradle-wrapper.jar even if .gitattributes is somehow ignored.
+          fetch-depth: 1
+
+      - name: Verify Gradle Wrapper integrity
+        run: |
+          set -e
+          JAR=gradle/wrapper/gradle-wrapper.jar
+          if [ ! -f "$JAR" ]; then
+            echo "::error::$JAR is missing from the checkout."
+            exit 1
+          fi
+          SIZE=$(stat -c%s "$JAR")
+          echo "Wrapper jar size: $SIZE bytes"
+          if [ "$SIZE" -lt 10000 ]; then
+            echo "::error::$JAR is suspiciously small ($SIZE bytes) - it is likely corrupted or was committed as a text/LFS pointer instead of the real binary."
+            exit 1
+          fi
+          if ! unzip -l "$JAR" | grep -q "org/gradle/wrapper/GradleWrapperMain.class"; then
+            echo "::error::$JAR does not contain org/gradle/wrapper/GradleWrapperMain.class - the jar is corrupted."
+            exit 1
+          fi
+          echo "Gradle Wrapper jar looks valid."
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4

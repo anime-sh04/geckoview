@@ -16,3 +16,15 @@ local.properties
 # Build outputs
 app/build/
 build/
+
+# --------------------------------------------------------------------
+# Gradle Wrapper: these files are BUILD-CRITICAL and must always be
+# committed. The negations below are a safety net in case a broader
+# rule (e.g. a stray "*.jar" or "gradle/" added later) would otherwise
+# exclude them.
+# --------------------------------------------------------------------
+!gradlew
+!gradlew.bat
+!gradle/wrapper/
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
