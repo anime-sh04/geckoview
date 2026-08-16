@@ -5,12 +5,19 @@ plugins {
 
 android {
     namespace = "com.example.geckobrowser"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.geckobrowser"
+        // minSdk intentionally left unchanged -- GeckoView's own minimum
+        // requirement and this app's UI don't need to move, and there is
+        // no dependency in the graph requiring a higher minSdk.
         minSdk = 23
-        targetSdk = 35
+        // targetSdk raised alongside compileSdk: Google/Play policy expects
+        // targetSdk to track compileSdk closely, and leaving targetSdk far
+        // behind compileSdk risks silently missing behavior changes for the
+        // platform version you're actually compiling against.
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
     }

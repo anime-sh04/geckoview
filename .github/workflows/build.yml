@@ -53,6 +53,15 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Install Android SDK platform 36 + build-tools
+        run: |
+          set -e
+          # compileSdk 36 requires the android-36 platform; AGP 8.10.x's
+          # default/minimum SDK Build Tools version is 35.0.0, and we also
+          # grab 36.0.0 since it matches compileSdk itself.
+          sdkmanager --install "platforms;android-36" "build-tools;35.0.0" "build-tools;36.0.0"
+          sdkmanager --list_installed
+
       - name: Cache Gradle packages
         uses: actions/cache@v4
         with:
