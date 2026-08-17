@@ -19,6 +19,14 @@ private const val TAG = "GeckoBrowser"
 /** Location of the bundled extension inside app/src/main/assets/extension/ */
 private const val EXTENSION_LOCATION = "resource://android/assets/extension/"
 
+/**
+ * Location of the extension's popup UI, to be placed by the developer at
+ * app/src/main/assets/extension/assets/1pmjta.html. This is not created or
+ * managed by this app; it is only referenced so the NOPECHA button can load it
+ * once the file is present on disk.
+ */
+private const val NOPECHA_POPUP_URL = "resource://android/assets/extension/assets/1pmjta.html"
+
 /** Must match browser_specific_settings.gecko.id in assets/extension/manifest.json */
 private const val EXTENSION_ID = "geckobrowser-example@example.com"
 
@@ -40,6 +48,9 @@ class MainActivity : AppCompatActivity() {
 
     private var canGoBackInBrowser = false
 
+    /** Tracks whether Retry should reload the target site or the NOPECHA popup. */
+    private var lastLoadedUrl: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -49,7 +60,8 @@ class MainActivity : AppCompatActivity() {
         installExtension()
 
         binding.startButton.setOnClickListener { showBrowser() }
-        binding.errorRetryButton.setOnClickListener { loadTargetUrl() }
+        binding.nopechaButton.setOnClickListener { showNopechaPopup() }
+        binding.errorRetryButton.setOnClickListener { retryLastLoadedUrl() }
         binding.errorHomeButton.setOnClickListener { showHome() }
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -143,7 +155,33 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadTargetUrl() {
         binding.errorContainer.visibility = android.view.View.GONE
-        geckoSession?.loadUri(getString(R.string.target_url))
+        lastLoadedUrl = getString(R.string.target_url)
+        geckoSession?.loadUri(lastLoadedUrl!!)
+    }
+
+    /** Reloads whichever screen (target site or NOPECHA popup) was last showing. */
+    private fun retryLastLoadedUrl() {
+        binding.errorContainer.visibility = android.view.View.GONE
+        val url = lastLoadedUrl ?: getString(R.string.target_url)
+        geckoSession?.loadUri(url)
+    }
+
+    /**
+     * Opens the NOPECHA extension popup (assets/1pmjta.html, to be placed by the
+     * developer at app/src/main/assets/extension/assets/1pmjta.html) inside the
+     * existing GeckoView browser screen. Reuses the same session/error/loading
+     * plumbing as the START flow, so relative asset paths inside the popup
+     * (its own CSS/JS/images under app/src/main/assets/extension/assets/)
+     * resolve normally since it's loaded via the resource:// extension root.
+     */
+    private fun showNopechaPopup() {
+        binding.homeContainer.visibility = android.view.View.GONE
+        binding.browserContainer.visibility = android.view.View.VISIBLE
+        binding.errorContainer.visibility = android.view.View.GONE
+
+        ensureSession()
+        lastLoadedUrl = NOPECHA_POPUP_URL
+        geckoSession?.loadUri(NOPECHA_POPUP_URL)
     }
 
     // ------------------------------------------------------------------

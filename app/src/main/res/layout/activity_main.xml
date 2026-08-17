@@ -39,15 +39,37 @@
             android:textColor="@color/muted"
             android:textSize="16sp" />
 
-        <Button
-            android:id="@+id/startButton"
+        <LinearLayout
+            android:id="@+id/actionButtonRow"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:backgroundTint="@color/primary"
-            android:text="@string/start_button"
-            android:textColor="@color/on_primary"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/startButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginEnd="6dp"
+                android:backgroundTint="@color/primary"
+                android:text="@string/start_button"
+                android:textColor="@color/on_primary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/nopechaButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                android:backgroundTint="@color/primary_dark"
+                android:text="@string/nopecha_button"
+                android:textColor="@color/on_primary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
